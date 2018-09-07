@@ -8,4 +8,6 @@
 out
 gen
 /loginInfo.xlsx
-/log/
+/log
+/log/*
+/yhtappium.iml

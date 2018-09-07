@@ -53,8 +53,8 @@ public class baseComposer {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability(CapabilityType.BROWSER_NAME, "");
         cap.setCapability("platformName", "Android"); //指定测试平台
-        cap.setCapability("deviceName", "T7G0215511002153"); //指定测试机的ID,通过adb命令`adb devices`获取
-        cap.setCapability("platformVersion", "5.0.1");
+        cap.setCapability("deviceName", "13e816a1"); //指定测试机的ID,通过adb命令`adb devices`获取
+        cap.setCapability("platformVersion", "7.0");
 
         //将上面获取到的包名和Activity名设置为值
         cap.setCapability("appPackage", "com.yht.haitao");
@@ -86,11 +86,13 @@ public class baseComposer {
         Thread.sleep(500);
 
         //立即体验
-        WebElement comeinBtn = driver.findElementById("com.yht.haitao:id/btn_skip");
-        comeinBtn.click();
+        WebElement btn = driver.findElementById("com.yht.haitao:id/btn_skip");
+        btn.click();
         Thread.sleep(3000);
+
         //取消页面红包
         cancelRedpacket(driver);
+
     }
 
     // 普通页左滑
@@ -112,8 +114,8 @@ public class baseComposer {
         Boolean flag=isElementExsit(driver,redpacket,"");
         System.out.println("++++++++判断红包元素是否存在++++++"+flag);
         if (flag){
-            WebElement cancelBtn = driver.findElementById("com.yht.haitao:id/btn_cancel");
-            cancelBtn.click();
+            WebElement btn = driver.findElementById("com.yht.haitao:id/btn_cancel");
+            btn.click();
         }
 
     }
@@ -134,7 +136,7 @@ public class baseComposer {
                 rwFile("元素/对象", res_txt, "不存在");
             }
         } catch (Exception e) {
-            rwFile("元素/对象", "抛异常", "");
+            rwFile("元素/对象", "抛异常", e.toString());
         }
         return flag;
     }
