@@ -29,10 +29,12 @@ public class homePageSearch {
 
             Thread.sleep(5000);
 
-            WebElement loading = driver.findElementById("com.yht.haitao:id/iv_loading");
-
-            Boolean flag=base.isElementExsit(driver,loading,"loading加载图片");
+            //WebElement loading = driver.findElementById("com.yht.haitao:id/iv_loading");
+            By lactor=By.id("com.yht.haitao:id/iv_loading");
+            //WebElement redpacket = driver.findElement(lactor);
             for (int i=5000;i<20000;){
+
+                Boolean flag=base.isElementExsit(driver,lactor,"loading加载图片");
                 if(flag){
                     Thread.sleep(5000);
                     i+=5000;

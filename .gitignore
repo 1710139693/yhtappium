@@ -11,3 +11,5 @@ gen
 /log
 /log/*
 /yhtappium.iml
+.idea/workspace.xml
+

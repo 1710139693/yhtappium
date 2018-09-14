@@ -1,38 +1,33 @@
 package common;
 
-import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
-
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
 
-import java.io.FileWriter;
-import java.time.Duration;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.annotations.*;
-
-import javax.xml.bind.Element;
-import java.net.URL;
-import java.util.List;
-import java.util.*;
-import java.io.*;
-import java.text.SimpleDateFormat;
-import sun.rmi.runtime.Log;
-import static java.lang.Thread.sleep;
-
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.io.*;
+import java.lang.reflect.Array;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 
 /**
@@ -48,13 +43,13 @@ public class baseComposer {
     //private AndroidDriver driver;
     static Duration duration=Duration.ofSeconds(1);
 
-
+    //启动APP
     public AndroidDriver setup(AndroidDriver driver) throws Exception {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability(CapabilityType.BROWSER_NAME, "");
         cap.setCapability("platformName", "Android"); //指定测试平台
-        cap.setCapability("deviceName", "13e816a1"); //指定测试机的ID,通过adb命令`adb devices`获取
-        cap.setCapability("platformVersion", "7.0");
+        cap.setCapability("deviceName", "79acace5"); //指定测试机的ID,通过adb命令`adb devices`获取
+        cap.setCapability("platformVersion", "7.1.1");
 
         //将上面获取到的包名和Activity名设置为值
         cap.setCapability("appPackage", "com.yht.haitao");
@@ -72,64 +67,170 @@ public class baseComposer {
 
     }
 
-
-    // 启动引导页左滑
-    public void guidSwipe(AndroidDriver driver) throws Exception{
-        //driver.swipe(x/10,y/2,x*9/10,y/2,500); //java-client 升级后无法使用
+    //获取屏幕尺寸
+    public int[] appScreen(AndroidDriver driver){
         Dimension size = driver.manage().window().getSize();
-        int height = size.height;
         int width = size.width;
-        TouchAction action=new TouchAction(driver).press(PointOption.point(width*9/10, height / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(width/10, height / 2)).release();
-        action.perform();
-        TouchAction action2=new TouchAction(driver).press(PointOption.point(width*9/10, height / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(width/10, height / 2)).release();
-        action2.perform();
-        Thread.sleep(500);
-
-        //立即体验
-        WebElement btn = driver.findElementById("com.yht.haitao:id/btn_skip");
-        btn.click();
-        Thread.sleep(3000);
-
-        //取消页面红包
-        cancelRedpacket(driver);
-
+        int height = size.height;
+        int[] appSize={width,height};
+        return appSize;
     }
 
-    // 普通页左滑
-    public void SwipeToRight(AndroidDriver driver) throws Exception{
-
-        Dimension size = driver.manage().window().getSize();
-        int height = size.height;
-        int width = size.width;
-        TouchAction action=new TouchAction(driver).press(PointOption.point(width*9/10, height / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(width/10, height / 2)).release();
+    // 普通页向右滑
+    public void swipeToRight(AndroidDriver driver) throws Exception{
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]*9/ 10, appScreen(driver)[1] / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/10, appScreen(driver)[1]/2)).release();
         action.perform();
         Thread.sleep(500);
     }
 
-    //取消页面红包
-    public  void  cancelRedpacket(AndroidDriver driver){
+    // 普通页向左滑
+    public void swipeToLeft(AndroidDriver driver) throws Exception{
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]/ 10, appScreen(driver)[1] / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]*9/10, appScreen(driver)[1]/2)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
 
-         WebElement redpacket = driver.findElementById("com.yht.haitao:id/iv_bg");
-        //判断红包元素是否存在
-        Boolean flag=isElementExsit(driver,redpacket,"");
-        System.out.println("++++++++判断红包元素是否存在++++++"+flag);
-        if (flag){
-            WebElement btn = driver.findElementById("com.yht.haitao:id/btn_cancel");
-            btn.click();
-        }
+    // 普通页向上滑
+    public void swipeToUp(AndroidDriver driver) throws Exception{
+
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0] / 2, appScreen(driver)[1] / 10)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/2, appScreen(driver)[1] * 9/ 10)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
+
+    // 普通页向下滑
+    public void swipeToDown(AndroidDriver driver) throws Exception{
+
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0] / 2, appScreen(driver)[1]* 9 / 10)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/2, appScreen(driver)[1] / 10)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
+
+    //通过id获取所有信息，判断是否已经滑到底部,直至滑到底部
+    public void swipeButtom(AndroidDriver driver,String resourceId) throws Exception{
+
+        boolean isSwipe=true;
+        String origanlInfo="";
+
+        do{
+            //滑动前获取当前页最后一个元素
+            List<WebElement> listInfo=driver.findElementsById(resourceId);
+            String currentInfo=listInfo.get(listInfo.size()-1).getText();
+            System.out.println("滑动前列表最后一个元素"+currentInfo);
+
+            //判断当前最后一个元素与滑动前最后一个元素是否相同
+            if(!currentInfo.equals(origanlInfo)){
+                origanlInfo=currentInfo;
+                //向下滑动
+                swipeToDown(driver);
+            }else {
+                isSwipe=false;
+                System.out.println("This is the buttom");
+            }
+
+        }while(isSwipe);
+        Thread.sleep(1000);
+    }
+
+    //通过id获取所有信息，判断是否已经滑到顶部,直至滑到顶部
+    public String swipeopTop(AndroidDriver driver,String resourceId) throws Exception{
+
+        boolean isSwipe=true;
+        String origanlInfo="";
+
+        do{
+            //滑动前获取当前页最后一个元素
+            List<WebElement> listInfo=driver.findElementsById(resourceId);
+            String currentInfo=listInfo.get(0).getText();
+            System.out.println("滑动前列表第一个元素"+currentInfo);
+
+            //判断当前第一个元素与滑动前第一个元素是否相同
+            if(!currentInfo.equals(origanlInfo)){
+                origanlInfo=currentInfo;
+                //向上滑动
+                swipeToUp(driver);
+            }else {
+                isSwipe=false;
+                System.out.println("This is the Top");
+            }
+
+        }while(isSwipe);
+        Thread.sleep(1000);
+        return origanlInfo;
 
     }
+
+    //tab菜单选择
+    public void selectTab(AndroidDriver driver,By lactor,int index) throws Exception{
+
+        //查找底部菜单元素集合
+        List<WebElement> tabss=driver.findElements(lactor);
+        System.out.println("选中元素是"+tabss.get(index).getText());
+        //遍历集合元素
+       /* for(int i=0;i<globalEs.size();i++){
+            System.out.println("第"+i+"个元素是"+tabss.get(i).getText());
+        }*/
+        WebElement tab=tabss.get(index);
+        tab.click();
+        Thread.sleep(2000);
+    }
+
+    //底部菜单选择
+    public void selectButtomTab(AndroidDriver driver,int index) throws Exception{
+
+        //查找菜单元素集合
+        By lactor=By.id("com.yht.haitao:id/text");
+        selectTab(driver,lactor,index);
+    }
+
+    //全球电商头部前端分类选择
+    public void selectTopTab(AndroidDriver driver,int index) throws Exception{
+        String[] arr=new String[]{"全球电商","综合电商","美妆个护","服饰鞋包","钟表配饰"};
+        System.out.println("选中元素==="+arr[index]);
+        //查找菜单元素集合
+        By lactor=By.xpath("//android.widget.TextView[@text=\'"+arr[index]+"\']");
+        WebElement tab=driver.findElement(lactor);
+        tab.click();
+        Thread.sleep(2000);
+
+    }
+
+    //值得买头部分类选择
+    public void selectTopTab2(AndroidDriver driver,int index) throws Exception{
+        String[] arr=new String[]{"精选","最新","鞋包","美妆","服饰","钟表","数码","运动","营养","个护"};
+
+      /*  for(int i=0;i<arr.length;i++){
+            //查找菜单元素集合
+            By lactor=By.xpath("//android.widget.TextView[@text=\'"+arr[i]+"\']");
+            selectTab(driver,lactor,0);
+        }*/
+
+        //找出com.yht.haitao:id/tab_layout，共3个
+
+
+        //在com.yht.haitao:id/tab_layout上找class是android.widget.TextView
+
+        //打印出TextView文本
+
+
+    }
+
+    //搜索
+    public void searchEvent(WebDriver driver,String str){
+
+    }
+
 
     /**
      * 判断元素/对象是否存在
      * @param driver
-     * @param element
+     * @param lactor
      * @return
      */
-    public boolean isElementExsit(AndroidDriver driver,WebElement element , String res_txt) {
+    public boolean isElementExsit(AndroidDriver driver,By lactor , String res_txt) {
         boolean flag = false;
         try {
-            flag = null != element;
+            flag = null != lactor;
             if (flag) {
                 rwFile("元素/对象", res_txt, "存在");
             }else {
@@ -191,6 +292,17 @@ public class baseComposer {
         return sdf.format(cl.getTime());
     }
 
+    /**
+     * 生成指定范围随机数
+     * @param max 最大数
+     * @param min 最小数
+     * @return
+     */
+    public int getRandomSectionNum(int max, int min) {
+        Random random = new Random();
+        int num = random.nextInt(max) % (max - min + 1) + min;
+        return num;
+    }
 
     /**
      * 读取Excel信息
