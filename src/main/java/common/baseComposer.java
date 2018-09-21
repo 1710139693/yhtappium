@@ -48,8 +48,8 @@ public class baseComposer {
         DesiredCapabilities cap = new DesiredCapabilities();
         cap.setCapability(CapabilityType.BROWSER_NAME, "");
         cap.setCapability("platformName", "Android"); //指定测试平台
-        cap.setCapability("deviceName", "79acace5"); //指定测试机的ID,通过adb命令`adb devices`获取
-        cap.setCapability("platformVersion", "7.1.1");
+        cap.setCapability("deviceName", "T7G0215511002153"); //指定测试机的ID,通过adb命令`adb devices`获取
+        cap.setCapability("platformVersion", "5.0.1");
 
         //将上面获取到的包名和Activity名设置为值
         cap.setCapability("appPackage", "com.yht.haitao");

@@ -28,9 +28,9 @@ public class globalPlatform {
             for(int i=0;i<platforms.size();i++){
                 System.out.println("第"+i+"个元素是"+platforms.get(i).getText());
             }
-            WebElement platform=platforms.get(0);
+            WebElement platform=platforms.get(1);
             platform.click();
-            Thread.sleep(6000);
+            Thread.sleep(10000);
 
             //检查是否成功进入电商介绍页
             By lactor=By.id("com.yht.haitao:id/btn_translation");
