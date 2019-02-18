@@ -12,7 +12,7 @@ public class worthBuy {
     public void worthBuyList(AndroidDriver driver) throws Exception{
 
         //进入值得买列表页
-        base.selectButtomTab(driver,2);
+        base.selectButtomTab(driver,base.worthBuyIndex);
 
         //交替切换tab
         base.selectTopTab2(driver,6);

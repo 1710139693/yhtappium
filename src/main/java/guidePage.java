@@ -33,8 +33,8 @@ public class guidePage {
        try {
            driver=base.setup(driver);
            guidSwipe(driver);
-           plat.browseGoods(driver);
-          // activety.worthBuyList(driver);
+           activety.worthBuyList(driver);
+          // plat.platformList(driver);
        }catch (Exception e){
            e.printStackTrace();
        }
@@ -44,7 +44,9 @@ public class guidePage {
     // 启动引导页左滑
     public void guidSwipe(AndroidDriver driver) throws Exception{
         //driver.swipe(x/10,y/2,x*9/10,y/2,500); //java-client 升级后无法使用
-        for(int page=1;page<=2;page++){
+        //判断引导页的页数pageNum,此处暂时写死为2,后期需优化
+        int paneName=2;
+        for(int page=1;page<=paneName;page++){
             TouchAction action=new TouchAction(driver).press(PointOption.point(base.appScreen(driver)[0]*9/10, base.appScreen(driver)[1] / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(base.appScreen(driver)[0]/10, base.appScreen(driver)[1] / 2)).release();
             action.perform();
         }

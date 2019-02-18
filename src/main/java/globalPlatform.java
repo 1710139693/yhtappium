@@ -13,12 +13,13 @@ public class globalPlatform {
     private AndroidDriver driver;
     baseComposer base=new baseComposer();
 
-    public void browseGoods(AndroidDriver driver) throws Exception {
+    //测试wap页浏览商品一直加载不出来
+    public void browseGoods(AndroidDriver driver,int swipeNum) throws Exception {
         try{
 
             Thread.sleep(1000);
             //1.进入全球电商tabbar
-            base.selectButtomTab(driver,3);
+            base.selectButtomTab(driver,base.globalPlatformIndex);
 
             //2.进入全球电商介绍页
            /*查找元素集合*/
@@ -32,22 +33,19 @@ public class globalPlatform {
             platform.click();
             Thread.sleep(10000);
 
-            //检查是否成功进入电商介绍页
-            By lactor=By.id("com.yht.haitao:id/btn_translation");
+            //检查是否成功进入电商介绍页,这里无效
+            By lactor=By.id("com.yht.haitao:id/title_back");
             //判断翻译元素是否存在
             Boolean flag=base.isElementExsit(driver,lactor,"");
-            System.out.println("++++++++判断翻译元素是否存在++++++"+flag);
+            System.out.println("++++++++判断元素是否存在++++++"+flag);
 
             if (flag){
                 //3.不停向下滑动浏览列表
-                for(int i=0;i<200;i++){
+                for(int i=0;i<swipeNum;i++){
                     base.swipeToDown(driver);
                     Thread.sleep(500);
                 }
-
             }
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -60,19 +58,21 @@ public class globalPlatform {
             //进入全球电商列表页
             base.selectButtomTab(driver,3);
 
-            //检查电商图片、平台logo、平台名称、平台简介、返利信息是否存在
+            //检查电商logo、国家logo、平台名称、平台简介、平台标签是否存在
             List<WebElement> platforms1=driver.findElementsById("com.yht.haitao:id/iv_icon");
             List<WebElement> platforms2=driver.findElementsById("com.yht.haitao:id/iv_logo");
             List<WebElement> platforms3=driver.findElementsById("com.yht.haitao:id/tv_title");
             List<WebElement> platforms4=driver.findElementsById("com.yht.haitao:id/tv_desc");
             List<WebElement> platforms5=driver.findElementsById("com.yht.haitao:id/tv_tag");
-            System.out.println("平台名称："+platforms3.get(0).getText()+"====平台简介："+platforms4.get(0).getText()+"====返利"+platforms5.get(0).getText()+"平台logo个数==========="+platforms2.size()+"图片个数==========="+platforms1.size());
+            System.out.println("平台名称："+platforms3.get(0).getText()+"====平台简介："+platforms4.get(0).getText()+"====标签"+platforms5.get(0).getText()+"国家logo个数==========="+platforms2.size()+"电商logo个数==========="+platforms1.size());
 
             //滑动底部
             //base.swipeButtom(driver,"com.yht.haitao:id/tv_title");
 
             //切换平台分类
-            base.selectTopTab(driver,3);
+            base.selectTopTab(driver);
+
+            //列表第一个电商标题
             List<WebElement> listInfo=driver.findElementsById("com.yht.haitao:id/tv_title");
             String firstInfo=listInfo.get(0).getText();
 
@@ -80,25 +80,23 @@ public class globalPlatform {
             base.swipeButtom(driver,"com.yht.haitao:id/tv_title");
 
             //下拉刷新，滑到顶部
-            String origanlInfo=base.swipeopTop(driver,"com.yht.haitao:id/tv_title");
+            String origanlInfo=base.swipeTop(driver,"com.yht.haitao:id/tv_title");
 
-            //检查头部分类是否在当前分类下
+            //滑到顶部后检查列表第一个电商是否在当前分类下
             if(origanlInfo.equals(firstInfo)){
-                System.out.println("切换列表刷新是否跳转：no");
+                System.out.println("电商在当前分类下：yes");
             }else {
-                System.out.println("切换列表刷新是否跳转：yes");
+                System.out.println("电商在当前分类下：no");
             }
 
-            base.swipeToUp(driver);
+            //进入电商介绍页浏览商品，上拉5次
+            browseGoods(driver,5);
 
-            //回到全球电商
-            //base.selectTopTab(driver,0);
+            //返回电商列表页
+             WebElement back=driver.findElementById("com.yht.haitao:id/title_back");
+             back.click();
+            Thread.sleep(1000);
 
-            /*//获取列表所有元素方法一：只能获取展示的四个元素
-            WebElement platformsView=driver.findElementById("com.yht.haitao:id/recycler");
-            List<WebElement> platforms=platformsView.findElements(By.className("android.view.View"));
-            //获取列表所有元素方法二：只能获取展示的四个元素
-            System.out.println("方法二========="+driver.getPageSource());*/
 
         }catch (Exception e){
             e.printStackTrace();

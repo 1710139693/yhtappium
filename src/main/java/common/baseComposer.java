@@ -24,10 +24,7 @@ import java.lang.reflect.Array;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -42,6 +39,13 @@ public class baseComposer {
 
     //private AndroidDriver driver;
     static Duration duration=Duration.ofSeconds(1);
+
+    //底部菜单位置
+    public static int homePageIndex=0;
+    public static int classificationIndex=1;
+    public static int worthBuyIndex=2;
+    public static int globalPlatformIndex=3;
+    public static int userCenterIndex=4;
 
     //启动APP
     public AndroidDriver setup(AndroidDriver driver) throws Exception {
@@ -76,32 +80,60 @@ public class baseComposer {
         return appSize;
     }
 
-    // 普通页向右滑
+    // 普通页向右滑，手势从右到左
     public void swipeToRight(AndroidDriver driver) throws Exception{
         TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]*9/ 10, appScreen(driver)[1] / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/10, appScreen(driver)[1]/2)).release();
         action.perform();
         Thread.sleep(500);
     }
 
-    // 普通页向左滑
+    // 头部视图向右滑，手势从右到左
+    public void headSwipeToRight(AndroidDriver driver) throws Exception{
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]*19/ 20, appScreen(driver)[1] / 20)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/20, appScreen(driver)[1]/20)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
+
+    // 第二行头部视图向右滑，手势从右到左
+    public void headSwipeToRight2(AndroidDriver driver) throws Exception{
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]*19/ 20, appScreen(driver)[1]*3 / 20)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/20, appScreen(driver)[1]*3/20)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
+
+    // 头部视图向左滑，手势从左到右
+    public void headSwipeToLeft(AndroidDriver driver) throws Exception{
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]/ 20, appScreen(driver)[1] / 20)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]*19/20, appScreen(driver)[1]/20)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
+
+    // 第二行头部视图向左滑，手势从左到右
+    public void headSwipeToLeft2(AndroidDriver driver) throws Exception{
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]/ 20, appScreen(driver)[1] *3/ 20)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]*19/20, appScreen(driver)[1]*3/20)).release();
+        action.perform();
+        Thread.sleep(500);
+    }
+
+    // 普通页向左滑，手势从左到右
     public void swipeToLeft(AndroidDriver driver) throws Exception{
         TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0]/ 10, appScreen(driver)[1] / 2)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]*9/10, appScreen(driver)[1]/2)).release();
         action.perform();
         Thread.sleep(500);
     }
 
-    // 普通页向上滑
+    // 普通页向上滑，手势从上到下
     public void swipeToUp(AndroidDriver driver) throws Exception{
 
-        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0] / 2, appScreen(driver)[1] / 10)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/2, appScreen(driver)[1] * 9/ 10)).release();
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0] / 2, appScreen(driver)[1] *2/ 10)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/2, appScreen(driver)[1] * 8/ 10)).release();
         action.perform();
         Thread.sleep(500);
     }
 
-    // 普通页向下滑
+    // 普通页向下滑，手势从下到上
     public void swipeToDown(AndroidDriver driver) throws Exception{
 
-        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0] / 2, appScreen(driver)[1]* 9 / 10)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/2, appScreen(driver)[1] / 10)).release();
+        TouchAction action=new TouchAction(driver).press(PointOption.point(appScreen(driver)[0] / 2, appScreen(driver)[1]* 8 / 10)).waitAction(WaitOptions.waitOptions(duration)).moveTo(PointOption.point(appScreen(driver)[0]/2, appScreen(driver)[1] *2/ 10)).release();
         action.perform();
         Thread.sleep(500);
     }
@@ -133,43 +165,52 @@ public class baseComposer {
     }
 
     //通过id获取所有信息，判断是否已经滑到顶部,直至滑到顶部
-    public String swipeopTop(AndroidDriver driver,String resourceId) throws Exception{
+    public String swipeTop(AndroidDriver driver,String resourceId) throws Exception{
 
         boolean isSwipe=true;
         String origanlInfo="";
 
         do{
-            //滑动前获取当前页最后一个元素
+            //滑动前获取当前页第一个元素
             List<WebElement> listInfo=driver.findElementsById(resourceId);
             String currentInfo=listInfo.get(0).getText();
             System.out.println("滑动前列表第一个元素"+currentInfo);
 
             //判断当前第一个元素与滑动前第一个元素是否相同
-            if(!currentInfo.equals(origanlInfo)){
+            if(currentInfo.equals(origanlInfo)){
+                isSwipe=false;
+                System.out.println("This is the Top");
+            }else {
                 origanlInfo=currentInfo;
                 //向上滑动
                 swipeToUp(driver);
-            }else {
-                isSwipe=false;
-                System.out.println("This is the Top");
             }
 
         }while(isSwipe);
         Thread.sleep(1000);
         return origanlInfo;
-
     }
 
-    //tab菜单选择
-    public void selectTab(AndroidDriver driver,By lactor,int index) throws Exception{
+    //tab菜单选择,index=-1表示随机,parentLactor=null表示无父级视图
+    public void selectTab(AndroidDriver driver,By parentLactor,By subLactor,int index) throws Exception{
 
-        //查找底部菜单元素集合
-        List<WebElement> tabss=driver.findElements(lactor);
+        List<WebElement> tabss;
+
+        if(parentLactor!=null){
+            //查找父级元素
+            WebElement parentTab=driver.findElement(parentLactor);
+            //查找tab元素集合
+            tabss=parentTab.findElements(subLactor);
+        }else{
+            //查找tab元素集合
+            tabss=driver.findElements(subLactor);
+        }
+
+        if(index==-1){
+            //随机点击其中一个tab
+            index=getRandomSectionNum(tabss.size()-1,0);
+        }
         System.out.println("选中元素是"+tabss.get(index).getText());
-        //遍历集合元素
-       /* for(int i=0;i<globalEs.size();i++){
-            System.out.println("第"+i+"个元素是"+tabss.get(i).getText());
-        }*/
         WebElement tab=tabss.get(index);
         tab.click();
         Thread.sleep(2000);
@@ -180,38 +221,54 @@ public class baseComposer {
 
         //查找菜单元素集合
         By lactor=By.id("com.yht.haitao:id/text");
-        selectTab(driver,lactor,index);
+        selectTab(driver,null,lactor,index);
     }
 
     //全球电商头部前端分类选择
-    public void selectTopTab(AndroidDriver driver,int index) throws Exception{
-        String[] arr=new String[]{"全球电商","综合电商","美妆个护","服饰鞋包","钟表配饰"};
-        System.out.println("选中元素==="+arr[index]);
-        //查找菜单元素集合
-        By lactor=By.xpath("//android.widget.TextView[@text=\'"+arr[index]+"\']");
-        WebElement tab=driver.findElement(lactor);
-        tab.click();
-        Thread.sleep(2000);
+    public void selectTopTab(AndroidDriver driver) throws Exception{
+
+        //电商前端分类选择
+        //找出前端分类那行元素com.yht.haitao:id/tab_layout
+        //WebElement category=driver.findElementById("com.yht.haitao:id/tab_layout");
+        By parentLactor=By.id("com.yht.haitao:id/tab_layout");
+
+        //左滑一下
+        headSwipeToRight2(driver);
+
+        //在前端分类那行元素com.yht.haitao:id/tab_layout上找class是android.support.v7.app.ActionBar$Tab的分类
+       By subLactor= By.className("android.support.v7.app.ActionBar$Tab");
+       selectTab(driver,parentLactor,subLactor,-1);
 
     }
 
     //值得买头部分类选择
     public void selectTopTab2(AndroidDriver driver,int index) throws Exception{
-        String[] arr=new String[]{"精选","最新","鞋包","美妆","服饰","钟表","数码","运动","营养","个护"};
-
-      /*  for(int i=0;i<arr.length;i++){
+      /* String[] arr=new String[]{"精选","最新","鞋包","美妆","服饰","钟表","数码","运动","营养","个护"};
+        for(int i=0;i<arr.length;i++){
             //查找菜单元素集合
             By lactor=By.xpath("//android.widget.TextView[@text=\'"+arr[i]+"\']");
             selectTab(driver,lactor,0);
         }*/
 
-        //找出com.yht.haitao:id/tab_layout，共3个
+        //cid选择
+        //找出com.yht.haitao:id/tab_cid
+        By parentLactor=By.id("com.yht.haitao:id/tab_cid");
 
+        //左滑一下
+        headSwipeToRight(driver);
 
-        //在com.yht.haitao:id/tab_layout上找class是android.widget.TextView
+        //在com.yht.haitao:id/tab_cid上找class是android.widget.LinearLayout/android.support.v7.app.ActionBar$Tab
+        //List<WebElement> cids=Cid.findElements(By.className("android.support.v7.app.ActionBar$Tab"));
+        By subLactor=By.className("\"android.support.v7.app.ActionBar$Tab\"");
+        selectTab(driver,parentLactor,subLactor,-1);
 
-        //打印出TextView文本
+        //did选择
+        //找出com.yht.haitao:id/tab_did
+        By parentLactor2=By.id("com.yht.haitao:id/tab_did");
 
+        //在com.yht.haitao:id/tab_did上找class是android.widget.LinearLayout/android.support.v7.app.ActionBar$Tab
+        By subLactor2=By.className("android.support.v7.app.ActionBar$Tab");
+        selectTab(driver,parentLactor2,subLactor2,-1);
 
     }
 
